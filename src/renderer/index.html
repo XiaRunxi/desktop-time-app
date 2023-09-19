@@ -1,0 +1,103 @@
+<!-- <!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Electron</title>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'"
+    />
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Time</title>
+    <style>
+        body {
+            font-family: 'Cooper Black','Cooper BlkIt BT','幼圆','OPPOSans H',sans-serif;
+            background-color: black;
+            color: rgb(214,205,240);
+            font-size: 40vw;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            user-select: none;
+            font-weight: bold;
+            /* text-shadow: 0 0 12px rgb(214,205,240);  */
+            cursor: none;
+        }
+        #clock{
+            position: relative;
+        }
+        .hours{
+            color: rgb(113,74,229);
+            position: relative;
+            /* text-shadow: 0 0 12px rgb(113,74,229);  */
+        }
+        .hours:nth-child(2){
+            color: rgb(172,142,254);
+            margin-left: -5vw;
+            opacity: 0.75;
+        }
+        .point{
+            position: absolute;
+            z-index: 1;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .minutes{
+            color: rgb(113,74,229);
+            position: relative;
+            /* text-shadow: 0 0 12px rgb(172,142,254);  */
+        }
+        .minutes:last-child{
+            color: rgb(172,142,254);
+            margin-left: -5vw;
+            opacity: 0.75;
+        }
+        .space{
+            margin-left: 2vw;
+        }
+    </style>
+</head>
+<body>
+    <div id="clock">
+      <span class="hours"></span><span class="hours"></span><span class="point">:</span><span class="minutes space"></span><span class="minutes"></span>
+      <!-- :<span id="seconds"></span> -->
+    </div>
+    <script>
+        window.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            changeTime('hours', hours);
+            changeTime('minutes', minutes);
+            changeTime('seconds', seconds);
+        }
+        function changeTime(id,content){
+            const clockElement = document.getElementsByClassName(id);
+            const nums=content.split('');
+            clockElement[0].textContent =nums[0];
+            clockElement[1].textContent = nums[1];
+        }
+
+        setInterval(updateTime, 1000); // 每秒更新一次时间
+        updateTime(); // 页面加载时初始化时间
+    </script>
+</body>
+</html>
