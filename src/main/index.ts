@@ -24,15 +24,14 @@ function createWindow(): void {
     }
   });
 
-  const isSecondInstance = app.hasSingleInstanceLock();
-  if (isSecondInstance) {
+  const isSecondInstance = app.requestSingleInstanceLock();
+  if (!isSecondInstance) {
     app.quit();
   }else{
     app.on('second-instance',(event, commandLine, workingDirectory) => {
         
         if (mainWindow) {
-          if (mainWindow.isMinimized()) mainWindow.restore();
-          mainWindow.focus();
+          mainWindow.show();
         }
     })
   }
