@@ -4,6 +4,10 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/tray-icon.png?asset'
 
 function createWindow(): void {
+
+   // 通过 app.makeSingleInstance 来确保只有一个实例运行
+  
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
@@ -18,7 +22,22 @@ function createWindow(): void {
       preload: join(__dirname, '../preload/index.js'),
       nodeIntegration: true
     }
-  })
+  });
+
+  const isSecondInstance = app.hasSingleInstanceLock();
+  if (isSecondInstance) {
+    app.quit();
+  }else{
+    app.on('second-instance',(event, commandLine, workingDirectory) => {
+        
+        if (mainWindow) {
+          if (mainWindow.isMinimized()) mainWindow.restore();
+          mainWindow.focus();
+        }
+    })
+  }
+
+
   // 创建一个空的菜单并将其设置为应用程序菜单
   const emptyMenu = Menu.buildFromTemplate([])
   Menu.setApplicationMenu(emptyMenu)
