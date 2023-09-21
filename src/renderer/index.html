@@ -43,12 +43,39 @@
         .hours{
             color: rgb(113,74,229);
             position: relative;
+            top:0;
+            transition:top 2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
             /* text-shadow: 0 0 12px rgb(113,74,229);  */
         }
+        .hours::before{
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            margin-top: -40vw;
+        }
+        .hours::after{
+            content: attr(after-data);
+            position: absolute;
+            left: 0;
+            top: 0;
+            margin-top: 40vw;
+        }
+
         .hours:nth-child(2){
             color: rgb(172,142,254);
             margin-left: -5vw;
             opacity: 0.75;
+        }
+        .hours:nth-child(2)::before{
+            content: '';
+        }
+        .hours:nth-child(2)::after{
+            content: attr(after-data);
+            position: absolute;
+            left: 0;
+            top: 0;
+            margin-top: 40vw;
         }
         .point{
             position: absolute;
@@ -60,26 +87,47 @@
             color: rgb(113,74,229);
             position: relative;
             /* text-shadow: 0 0 12px rgb(172,142,254);  */
+
+        }
+        .minutes::after{
+            content: attr(after-data);
+            position: absolute;
+            left: 0;
+            top: 0;
+            margin-top: 40vw;
         }
         .minutes:last-child{
             color: rgb(172,142,254);
             margin-left: -5vw;
             opacity: 0.75;
         }
+        .minutes:last-child::after{
+            content: attr(after-data);
+            position: absolute;
+            left: 0;
+            top: 0;
+            margin-top: 40vw;
+        }
         .space{
             margin-left: 2vw;
         }
+        
     </style>
 </head>
 <body>
     <div id="clock">
-      <span class="hours"></span><span class="hours"></span><span class="point">:</span><span class="minutes space"></span><span class="minutes"></span>
+      <span class="hours" after-data=""></span><span class="hours" after-data=""></span><span class="point">:</span><span class="minutes space" after-data=""></span><span class="minutes" after-data=""></span>
       <!-- :<span id="seconds"></span> -->
     </div>
     <script>
         window.addEventListener('contextmenu', function (e) {
             e.preventDefault();
         });
+        let oldHour='';
+        let oldMinute='';
+        let curHour='';
+        let curMinute='';
+
         function updateTime() {
             const now = new Date();
             const hours = now.getHours().toString().padStart(2, '0');
@@ -87,13 +135,24 @@
             const seconds = now.getSeconds().toString().padStart(2, '0');
             changeTime('hours', hours);
             changeTime('minutes', minutes);
-            changeTime('seconds', seconds);
+            // changeTime('seconds', seconds);
         }
         function changeTime(id,content){
+            let after='';
+            if(id==='hours' && content==='23') {
+                after='00';
+            }else{
+                after=(Number(content)+1).toString().padStart(2,'0');
+            }
+            console.log(after);
             const clockElement = document.getElementsByClassName(id);
             const nums=content.split('');
-            clockElement[0].textContent =nums[0];
+            const afterNums=after.split('');
+            clockElement[0].textContent =nums[0];     
+            clockElement[0].setAttribute('after-data',afterNums[0]);
             clockElement[1].textContent = nums[1];
+            clockElement[1].setAttribute('after-data',afterNums[1]);
+
         }
 
         setInterval(updateTime, 1000); // 每秒更新一次时间
