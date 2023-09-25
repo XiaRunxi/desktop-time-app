@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: desktop-time-app
+productName: Desktop Time
 directories:
   buildResources: build
 files:
@@ -12,7 +12,8 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: desktop-time-app
+  executableName: Desktop Time
+  icon: resources/tray-icon.ico
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

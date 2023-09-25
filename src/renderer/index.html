@@ -20,8 +20,12 @@
 <head>
     <title>Time</title>
     <style>
+        @font-face{
+            font-family: 'COOPBL';
+            src:url(./src/assets/COOPBL.ttf) format('woff');
+        }
         body {
-            font-family: 'Cooper Black','幼圆','OPPOSans H',sans-serif;
+            font-family: 'COOPBL','幼圆','OPPOSans H',sans-serif;
             background-color: black;
             color: rgb(214,205,240);
             font-size: 40vw;
@@ -45,8 +49,12 @@
             color: rgb(113,74,229);
             position: relative;
             top:0;
+        }
+        .hours.subscriptAnim{
             transition:top 2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-            /* text-shadow: 0 0 12px rgb(113,74,229);  */
+        }
+        .hours.next{
+            top:-50vw;
         }
         .hours::after{
             content: attr(after-data);
@@ -131,36 +139,43 @@
         let isInitHours=false;
         let isInitMinutes=false;
 
+        // let testStr='2023-09-25T09:58:55';
+        // const testDate = new Date(testStr);
+        // const now=testDate;
         function updateTime() {
+            //now.setSeconds(now.getSeconds()+1);
             
             const now = new Date();
-            const date=new Date();
+            const date=new Date(now);
             date.setMinutes(date.getMinutes()+1);
             const nextTime=date;
             const hours = now.getHours().toString().padStart(2, '0');
             const minutes = now.getMinutes().toString().padStart(2, '0');
             const seconds = now.getSeconds().toString().padStart(2, '0');
-            
+            const nextHours=nextTime.getHours().toString().padStart(2,'0');
+            if(hours!==nextHours){
+                setAttribute('hours',nextHours);
+            }
             if(curHour!==hours){
                 oldHour=curHour;
                 curHour=hours;
                 nextHour=nextTime.getHours().toString().padStart(2,'0');
-                console.log(`cur hour: ${curHour},next hour: ${nextHour}`);
+                
                 if(!isInitHours){
                     isInitHours=true;
-                    init('hours', hours,nextHour);
+                    init('hours', curHour,nextHour);
                 }else{
+                    // console.log(`old hour：${oldHour},cur hour: ${curHour},next hour: ${nextHour}`);    
                     //执行动画方法
                     nextStep('hours',oldHour,curHour,nextHour);
                     //再调整数据
                 }
-                
             }
             if(curMinute!==minutes){   
                 oldMinute=curMinute;
                 curMinute=minutes;
                 nextMinute=nextTime.getMinutes().toString().padStart(2,'0');
-                console.log(`old munites:${oldMinute},cur munites:${curMinute},next munites:${nextMinute}`);
+                // console.log(`old munites:${oldMinute},cur munites:${curMinute},next munites:${nextMinute}`);
                 if(!isInitMinutes){
                     isInitMinutes=true;
                     init('minutes', curMinute,nextMinute);
@@ -169,6 +184,12 @@
                 }
               
             }
+        }
+        function setAttribute(id,value){
+            const doc=document.getElementsByClassName(id);
+            const values=value.split('');            
+            doc[0].setAttribute('after-data',values[0]);
+            doc[1].setAttribute('after-data',values[1]);
         }
         function init(id,content,next){
             const clockElement = document.getElementsByClassName(id);
@@ -185,15 +206,15 @@
         //38 39 40 
         function nextStep(id,old,cur,next) {
             const doc=document.getElementsByClassName(id);
-            let oldFirst=old.split('')[0];3
-            let oldSeconds=old.split('')[1];8
-            let curFirst=cur.split('')[0];3
-            let curSecond=cur.split('')[1];9
-            let nextFirst=next.split('')[0];4
-            let nextSecond=next.split('')[1];0
-            console.log(curFirst,nextFirst,nextSecond);
+            let oldFirst=old.split('')[0];
+            let oldSeconds=old.split('')[1];
+            let curFirst=cur.split('')[0];
+            let curSecond=cur.split('')[1];
+            let nextFirst=next.split('')[0];
+            let nextSecond=next.split('')[1];
 
             if(oldFirst!==curFirst){
+                console.log('我是：',id);
                 doc[0].classList.add('subscriptAnim','next');
                 //变化完之后，十秒钟后，更改当前的数据，然后，移除类；
                 setTimeout(() => {
